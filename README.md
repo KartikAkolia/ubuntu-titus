@@ -1,8 +1,5 @@
 # Ubuntu-titus
 Ubuntu customizations from Chris Titus Tech
- 
-## Requirements
-_This is a Ubuntu server build_
 
 ### Download Ubuntu Server
 
@@ -15,4 +12,3 @@ git clone https://github.com/KartikAkolia/ubuntu-titus
 cd ubuntu-titus
 sudo ./install.sh
 ```
-

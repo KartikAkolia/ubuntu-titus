@@ -1,57 +1,58 @@
 #!/bin/bash
 
-# Check if Script is Run as Root
+# Ensure the script is run as root
 if [[ $EUID -ne 0 ]]; then
-  echo "You must be a root user to run this script, please run sudo ./install.sh" 2>&1
+  echo "You must be a root user to run this script. Please run: sudo ./install.sh" 2>&1
   exit 1
 fi
 
+# Variables
 username=$(id -u -n 1000)
 builddir=$(pwd)
+config_dir="/home/$username/.config"
+fonts_dir="/home/$username/.fonts"
+pictures_dir="/home/$username/Pictures"
+sddm_themes_dir="/usr/share/sddm/themes"
 
-# Update packages list and update system
-apt update
-apt upgrade -y
+# Update package list and upgrade system
+apt update && apt upgrade -y
 
 # Install nala
 apt install nala -y
 
-# Making .config and Moving config files and background to Pictures
-cd "$builddir" || exit
-mkdir -p "/home/$username/.config"
-mkdir -p "/home/$username/.fonts"
-mkdir -p "/home/$username/Pictures"
-mkdir -p /usr/share/sddm/themes
+# Create necessary directories
+mkdir -p "$config_dir" "$fonts_dir" "$pictures_dir" "$sddm_themes_dir"
+
+# Copy config files and background
 cp .Xresources "/home/$username"
 cp .Xnord "/home/$username"
-cp -R dotconfig/* "/home/$username/.config/"
-cp bg.jpg "/home/$username/Pictures/"
+cp -R dotconfig/* "$config_dir/"
+cp bg.jpg "$pictures_dir/"
 chown -R "$username:$username" "/home/$username"
 
-# Installing sugar-candy dependencies
+# Install dependencies and essential programs
 nala install libqt5svg5 qml-module-qtquick-controls qml-module-qtquick-controls2 -y
-# Installing Essential Programs 
 nala install feh bspwm sxhkd kitty rofi polybar picom thunar nitrogen lxpolkit x11-xserver-utils unzip yad wget pulseaudio pavucontrol -y
-# Installing Other less important Programs
+
+# Install other less important programs
 nala install neofetch flameshot psmisc mangohud vim lxappearance papirus-icon-theme lxappearance fonts-noto-color-emoji sddm variety -y
 
-# Download Nordic Theme
+# Download and install Nordic Theme
 cd /usr/share/themes/ || exit
 git clone https://github.com/EliverLara/Nordic.git
 
-# Installing fonts
+# Install fonts
 cd "$builddir" || exit
-nala install fonts-font-awesome
+nala install fonts-font-awesome -y
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
-unzip FiraCode.zip -d "/home/$username/.fonts"
+unzip FiraCode.zip -d "$fonts_dir"
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Meslo.zip
-unzip Meslo.zip -d "/home/$username/.fonts"
-mv dotfonts/fontawesome/otfs/*.otf "/home/$username/.fonts/"
-chown "$username:$username" "/home/$username/.fonts/*"
+unzip Meslo.zip -d "$fonts_dir"
+mv dotfonts/fontawesome/otfs/*.otf "$fonts_dir/"
+chown "$username:$username" "$fonts_dir"/*
 
-# Reloading Font
+# Reload fonts and remove zip files
 fc-cache -vf
-# Removing zip Files
 rm ./FiraCode.zip ./Meslo.zip
 
 # Install Nordzy cursor
@@ -61,15 +62,19 @@ cd Nordzy-cursors || exit
 cd "$builddir" || exit
 rm -rf Nordzy-cursors
 
-# Install brave-browser
-sudo nala install apt-transport-https curl -y
-sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list
-sudo nala update
-sudo nala install brave-browser -y
+# Install Google Chrome
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+nala install ./google-chrome-stable_current_amd64.deb -y
+rm google-chrome-stable_current_amd64.deb
 
-# Enable graphical login and change target from CLI to GUI
+# Enable graphical login and set default target to graphical
 tar -xzvf slice.tar.gz -C /usr/share/sddm/themes
 cp -f "$builddir/sddm.conf" /etc/
 systemctl enable sddm
 systemctl set-default graphical.target
+
+# Cleanup
+nala autoremove -y
+nala clean
+
+echo "Installation completed successfully."

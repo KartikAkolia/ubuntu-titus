@@ -11,7 +11,7 @@ Download from <https://ubuntu.com/download/server> and install the ISO using any
 ### Installation Guide
 
 ```
-git clone https://github.com/ChrisTitusTech/ubuntu-titus
+git clone https://github.com/KartikAkolia/ubuntu-titus
 cd ubuntu-titus
 sudo ./install.sh
 ```

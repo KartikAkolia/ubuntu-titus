@@ -44,9 +44,9 @@ git clone https://github.com/EliverLara/Nordic.git
 # Install fonts
 cd "$builddir" || exit
 nala install fonts-font-awesome -y
-wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip
 unzip FiraCode.zip -d "$fonts_dir"
-wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Meslo.zip
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/Meslo.zip
 unzip Meslo.zip -d "$fonts_dir"
 mv dotfonts/fontawesome/otfs/*.otf "$fonts_dir/"
 chown "$username:$username" "$fonts_dir"/*

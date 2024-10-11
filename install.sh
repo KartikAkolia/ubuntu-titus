@@ -31,7 +31,7 @@ apt install libqt5svg5 qml-module-qtquick-controls qml-module-qtquick-controls2 
 # Install Essential Programs
 apt install feh bspwm sxhkd kitty rofi polybar picom thunar nitrogen lxpolkit x11-xserver-utils unzip yad wget pulseaudio pavucontrol -y
 # Install Other less important Programs
-apt install neofetch flameshot psmisc mangohud vim lxappearance papirus-icon-theme lxappearance fonts-noto-color-emoji sddm variety -y
+apt install flameshot psmisc vim lxappearance papirus-icon-theme fonts-noto-color-emoji sddm variety -y
 
 # Download Nordic Theme
 cd /usr/share/themes/ || exit
